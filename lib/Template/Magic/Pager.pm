@@ -1,5 +1,5 @@
 package Template::Magic::Pager ;
-$VERSION = 1.11 ;
+$VERSION = 1.12 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
@@ -144,9 +144,9 @@ __END__
 
 Template::Magic::Pager - HTML Pager for Template::Magic
 
-=head1 VERSION 1.11
+=head1 VERSION 1.12
 
-Included in Template-Magic-Pager 1.11 distribution.
+Included in Template-Magic-Pager 1.12 distribution.
 
 The latest versions changes are reported in the F<Changes> file in this distribution.
 
