@@ -1,5 +1,11 @@
 Template-Magic-Pager Latest Versions Changes
 
+Version 1.1
+- WARNING! The page_rows MUST be passed as an argument to the new() method!
+  This could break your old code, although it is extremely simple to modify
+  it. Sorry for the change (needed to reduce the two modules to just one).
+- Deprecated template::Magic::Slicer. You should use Template::Magic::Pager
+  instead
 
 Version 1.0
 - First release

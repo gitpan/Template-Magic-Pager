@@ -5,7 +5,7 @@
 ; use ExtUtils::MakeMaker
 
 ; my $dist = 'Template::Magic::Pager'
-; my $vers = '1.0'
+; my $vers = '1.1'
 
 ; WriteMakefile
    ( NAME           => $dist
@@ -28,7 +28,7 @@
 ; my $LWP_installed = eval {require LWP::Simple}
 ; if ( $LWP_installed )
    { my $current_vers = LWP::Simple::get
-                        ( "http://perl.4pro.net/version_ceck"
+                        ( "http://perl.4pro.net/version_check"
                         . "?DISTRIBUTION=$dist&VERSION=$vers&PERL=$]-$^O"
                         )
    ; exit unless defined $current_vers

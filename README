@@ -5,7 +5,7 @@ Template-Magic-Pager README File
 Description
 -----------
 
-Template::Magic::Pager and Template::Magic::Slicer are HTML pagers for Template::Magic. they allows you to split an array into several pages, automating all the process and supplying all the labels to produce linked result pages (Gooooogle style).
+Template::Magic::Pager is a HTML pager for Template::Magic. It allows you to split an array into several pages, automating all the process and supplying all the labels to produce linked result pages (Gooooogle style).
 
 
 Installation
@@ -28,4 +28,4 @@ Installation
 
 --
 Domizio Demichelis - perl.4pro.net
-2004-04-09
+2004-06-08

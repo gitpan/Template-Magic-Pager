@@ -4,13 +4,12 @@
 ; use warnings
 
 ; use Template::Magic::Pager
-; use Template::Magic::Slicer
 ; use Template::Magic
 ; our $no_page
 
 ; my $temp = do{local $/; <DATA>}
 ; my @rows = (1..100)
-; our $pager = Template::Magic::Slicer->new ( total_results => \@rows #
+; our $pager = Template::Magic::Pager->new ( total_results => \@rows #
                                             , rows_per_page => 4
                                             , page_number   => 3
                                             ) 
@@ -30,11 +29,12 @@ EOO
 ; $pager = Template::Magic::Pager->new ( total_results => 100 #
                                        , rows_per_page => 4
                                        , page_number   => 3
+                                       , page_rows     => [9..12]
                                        ) 
 
 
-; $tm = Template::Magic->new 
-; $out = $tm->output(\$temp, {page_rows => [9..12]} )
+; $tm = Template::Magic->new
+; $out = $tm->output(\$temp)
 ; is ( $$out , <<'EOO' )
 start-->
 
@@ -46,7 +46,7 @@ Results 9 to 12 of 100 (page 3/25)
 EOO
 
 ; @rows = ()
-; $pager = Template::Magic::Slicer->new ( total_results => \@rows 
+; $pager = Template::Magic::Pager->new ( total_results => \@rows
                                         , rows_per_page  => 4
                                         , page_number    => 3
                                         ) 

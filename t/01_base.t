@@ -1,12 +1,11 @@
-; use Test::More tests => 41
+; use Test::More tests => 40
 ; use strict
 ; use warnings
 
 ; use Template::Magic::Pager
-; use Template::Magic::Slicer  
 ; my $results = [1..10]
 
-; our $p = Template::Magic::Slicer->new( total_results => $results
+; our $p = Template::Magic::Pager->new( total_results => $results
                                      , rows_per_page  => 4
                                      , page_number    => 2
                                      )
@@ -37,10 +36,9 @@
 ; is( $p->next_page => '' )
 ; is( $p->previous_page => 2 )
 ; is( $p->total_pages => 3 )
-; eval { $p->page_rows }
-; ok( $@ )
+
   
-; $p = Template::Magic::Slicer->new( total_results  => $results
+; $p = Template::Magic::Pager->new( total_results  => $results
                                   , rows_per_page  => 5
                                   , page_number    => 2
                                   )
@@ -57,7 +55,7 @@
 ; is( join('-', @{$p->page_rows}) => '6-7-8-9-10' )
    
 ; my $bigSel = [1..100]
-; $p = Template::Magic::Slicer->new( total_results => $bigSel
+; $p = Template::Magic::Pager->new( total_results => $bigSel
                                   , rows_per_page => 5
                                   )
 ; is( scalar @{$p->index} => 10 )
@@ -65,7 +63,7 @@
 ; is( $p->index->[0]{page_number} => 1 )
       
 
-; $p = Template::Magic::Slicer->new( total_results => $bigSel
+; $p = Template::Magic::Pager->new( total_results => $bigSel
                                   , rows_per_page => 5
                                   , page_number   => 6
                                   )
@@ -75,7 +73,7 @@
 ; is( $p->index->[5]{page_number} => 6 )
 
 
-; $p = Template::Magic::Slicer->new( total_results => $bigSel
+; $p = Template::Magic::Pager->new( total_results => $bigSel
                                   , rows_per_page => 5
                                   , page_number   => 19
                                   )
@@ -83,7 +81,6 @@
 ; is( ref $p->index->[8]{current_page} => 'HASH' )
 ; is( $p->index->[0]{page_number} => 11 ) 
 ; is( $p->index->[9]{page_number} => 20 )
-
 
 
 

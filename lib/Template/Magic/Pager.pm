@@ -1,5 +1,5 @@
 package Template::Magic::Pager ;
-$VERSION = 1.0 ;
+$VERSION = 1.1 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
@@ -12,7 +12,7 @@ $VERSION = 1.0 ;
 ; sub new
    { my $c = shift
    ; ref($c)  && croak qq(Can't call method "new" on a reference)
-   ; (@_ % 2) && croak qq(Odd number of arguments for "$c"->new)
+   ; (@_ % 2) && croak qq(Odd number of arguments for $c->new)
    ; my $s = bless {}, $c
    ; while ( my ($p, $v) = splice @_, 0, 2 )
       { if ($s->can($p))                     # if method
@@ -22,13 +22,22 @@ $VERSION = 1.0 ;
          { croak qq(No such property "$p")
          }
       }
-   ; $s->_init if $s->can('_init')
+   ; if ( ref $$s{total_results} eq 'ARRAY' )
+      { my $r = $$s{total_results}
+      ; $$s{total_results} = @$r
+      ; $s->page_rows = [ @$r[ $s->start_offset .. $s->end_offset ] ]
+      }
    ; $$s{total_results} ? $s : undef
    }
       
 ; use Object::props
       ( { name       => 'total_results'
-        , validation => sub { /^[\d]+$/ }  # verificare _
+        , validation => sub
+                         {  /^[\d]+$/
+                         || ref eq 'ARRAY'
+                         }
+        }
+      , { name       => 'page_rows'
         }
       , { name       => 'page_number'
         , default    => 1
@@ -84,16 +93,16 @@ $VERSION = 1.0 ;
      : $end
    }
 
-; sub start_result 
+; sub start_result
    { my ($s, $page_number) = @_
-   ; $s->start_offset($page_number) + 1 
+   ; $s->start_offset($page_number) + 1
    }
 
 ; sub end_result
    { my ($s, $page_number) = @_
-   ; $s->end_offset($page_number) + 1 
+   ; $s->end_offset($page_number) + 1
    }
- 
+   
 ; sub index
    { my $s = shift
    ; my ( $half, $start, $end )
@@ -113,16 +122,16 @@ $VERSION = 1.0 ;
       ; $start = 1 if $start < 1
       }
    ; my @i = map
-              { $_ + 1 != $page_number
+              { $_ != $page_number
                 ? { linked_page  => {}
-                  , page_number  => $_ + 1
-                  , start_result => $s->start_result($_+1)
-                  , end_result   => $s->end_result($_+1)
+                  , page_number  => $_
+                  , start_result => $s->start_result($_)
+                  , end_result   => $s->end_result($_)
                   }
                 : { current_page => {}
-                  , page_number  => $_ + 1
+                  , page_number  => $_
                   }
-              } $start - 1 .. $end - 1
+              } $start .. $end
    ; \ @i
    }
 
@@ -135,9 +144,9 @@ __END__
 
 Template::Magic::Pager - HTML Pager for Template::Magic
 
-=head1 VERSION 1.0
+=head1 VERSION 1.1
 
-Included in Template-Magic-Pager 1.0 distribution.
+Included in Template-Magic-Pager 1.1 distribution.
 
 The latest versions changes are reported in the F<Changes> file in this distribution.
 
@@ -151,7 +160,7 @@ HTML Pager for Template::Magic
 
 =item * Template::Magic::Slicer
 
-HTML Slicer for Template::Magic
+Deprecated module
 
 =back
 
@@ -182,8 +191,19 @@ B<Note>: The installation of this module runs an automatic version check connect
 
   use Template::Magic::Pager ;
   
+  # 1st way (useful when you have big number of results)
   $pager = Template::Magic::Pager->new
            ( total_results   => $results         # integer
+           , page_rows       => $rows            # ARRAY ref
+           , page_number     => $page_number     # integer
+           , rows_per_page   => $rows_per_page   # integer
+           , pages_per_index => $pages_per_index # integer
+           ) ;
+  
+  # 2nd way (useful when you have all the result in an ARRAY)
+  # total_results is an ARRAY ref and page_rows is ommitted
+  $pager = Template::Magic::Pager->new
+           ( total_results   => $results         # ARRAY ref
            , page_number     => $page_number     # integer
            , rows_per_page   => $rows_per_page   # integer
            , pages_per_index => $pages_per_index # integer
@@ -197,9 +217,19 @@ This module make it very simple to split an array of results into pages, and use
 
 Using it is very simple: you have just to create an object in your code and define a block in your template and Template::Magic will do the rest. Inside the block you will have available a complete set of magic labels to define the result headers, dynamic index navigation bars Goooogle style and more. (see L<"Labels and Blocks">)
 
-B<Note>: This module is very useful when you have big number of results coming from a DB query, because you don't need to retrieve them all in order to initialize the object (i.e. you just need to pass the total number of results, not the whole array reference of the results).
+You can use this module in two different situations:
 
-If you already have all the results in memory, you should use the L<Template::Magic::Slicer|Template::Magic::Slicer> which is written exactly for that situation.
+=over
+
+=item 1
+
+When you have big number of results coming from a DB query. In this situation you don't need to retrieve them all in order to initialize the object: you just need to pass the total number of results as the C<total_results> and the slice of the C<page_rows> to display in the page.
+
+=item 2
+
+When you already have all the results in memory, and you want to display just one slice of them. In order to do so you need just to pass the reference to the whole ARRAY of results as the C<total_results> and the object will set the C<page_rows> to the correct slice of results.
+
+=back
 
 =head2 Useful links
 
@@ -225,7 +255,13 @@ This method returns the new object reference ONLY if there are results to displa
 
 =item * total_results
 
-Mandatory argument. It must be an integer value of the total number of results you want to split into pages (not to be confused with the results of one page). If the passed value is not true (0 or undef), then the new() method will return the undef value instead of the object, thus allowing you to define a C<NOT_pager> block that will be printed when no result has been found.
+Mandatory argument. It may be an integer value of the total number of results you want to split into pages (not to be confused with the results of one page), or it may be a reference to the whole array of results; in this case you should omit the C<page_rows> argument. (see L<SYNOPSIS> to see the two ways to use the new() method)
+
+If the passed value is not true (0 or undef), then the new() method will return the undef value instead of the object, thus allowing you to define a C<NOT_pager> block that will be printed when no result has been found.
+
+=item * page_rows
+
+Mandatory argument only if the C<total_result> argument is an integer. It expect a reference to an ARRAY containing the slice of results of the current page (or a reference to a sub returning the reference to the ARRAY).
 
 =item * page_number
 
@@ -262,6 +298,10 @@ The number of the result which ends the current page.
 =item * total_results
 
 The number of the total results (same number passed as the total_results argument: see L<new()|"new( arguments )">).
+
+=item * page_rows (block)
+
+This block will be automatically used by Template::Magic to generate the printing loop with the slice of results of the current page.
 
 =item * page_number
 
@@ -321,13 +361,14 @@ This is a complete example with results coming from a DB query. In this case you
   
   # this manages the page_rows template block (notice the 'our')
   # (change the assignment with any real DB query)
-  our $page_rows  = ... SELECT ...
-                        LIMIT $offset, $rows_per_page ... ;   # ARRAY ref
-  my $count       = ... SELECT FOUND_ROWS() ... ;             # integer e.g 526
+  my $page_rows  = ... SELECT ...
+                       LIMIT $offset, $rows_per_page ... ;   # ARRAY ref
+  my $count      = ... SELECT FOUND_ROWS() ... ;             # integer e.g 526
   
   # $pager whould be undef if $count is not true
   our $pager = Template::Magic::Pager->new
                ( total_results   => $count           # (e.g 1526)
+               , page_rows       => $page_rows       # (ARRAY ref)
                , page_number     => $page_number     # (3)
                , rows_per_page   => $rows_per_page   # (20)
                , pages_per_index => $pages_per_index # (20)
@@ -341,9 +382,11 @@ B<Note>: To be sure the object is syncronized with the retrived DB query, you mu
 
   my $offset = $rows_per_page * ($page_number - 1) ;
 
-=head1 SEE ALSO
+=head2 More examples
 
-L<Template::Magic::Slicer|Template::Magic::Slicer>
+You can find a little example (complete of templates) in the F<examples> dir included in this distribution.
+
+B<Note>: While you are experimenting with this module, you are probably creating examples that could be useful to other users. Please submit them to theTemplate::Magic mailing list, and I will add them to the next release, giving you the credit of your code. Thank you in advance for your collaboration.
 
 =head1 SUPPORT
 
