@@ -1,5 +1,5 @@
 package Template::Magic::Slicer ;
-$VERSION = 1.12 ;
+$VERSION = 1.13 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
@@ -7,6 +7,7 @@ $VERSION = 1.12 ;
 ; use strict
 ; use Carp
 ; $Carp::Internal{+__PACKAGE__}++
+; use warnings::register
 ; our $no_template_magic_zone = 1 # prevents passing the zone object to properties
 ; use Template::Magic::Pager
 ; push our @ISA, 'Template::Magic::Pager'
@@ -15,7 +16,7 @@ $VERSION = 1.12 ;
 ; BEGIN
    { warn qq("Template::Magic::Slicer" is a deprecated module. )
         . qq(You should use "Template::Magic::Pager" instead\n)
-          if $^W
+          if warnings::enabled
    }
 
     

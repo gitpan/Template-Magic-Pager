@@ -1,13 +1,13 @@
 package Template::Magic::Pager ;
-$VERSION = 1.12 ;
+$VERSION = 1.13 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
 
 ; use strict
 ; use Carp
-; $Carp::Internal{+__PACKAGE__}++ 
-; our $no_template_magic_zone = 1 # prevents passing the zone object to properties  
+; $Carp::Internal{+__PACKAGE__}++
+; our $no_template_magic_zone = 1 # prevents passing the zone object to properties
      
 ; sub new
    { my $c = shift
@@ -144,9 +144,9 @@ __END__
 
 Template::Magic::Pager - HTML Pager for Template::Magic
 
-=head1 VERSION 1.12
+=head1 VERSION 1.13
 
-Included in Template-Magic-Pager 1.12 distribution.
+Included in Template-Magic-Pager 1.13 distribution.
 
 The latest versions changes are reported in the F<Changes> file in this distribution.
 
@@ -239,7 +239,7 @@ A simple and useful navigation system between my modules is available at this UR
 
 =item *
 
-More practical topics are probably discussed in the mailing list at this URL: http://lists.sourceforge.net/lists/listinfo/template-magic-users
+More practical topics are discussed in the mailing list at this URL: http://lists.sourceforge.net/lists/listinfo/template-magic-users
 
 =back
 

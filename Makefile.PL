@@ -3,16 +3,14 @@
 
 ; use 5.006_001
 ; use ExtUtils::MakeMaker
-
-; my $dist = 'Template::Magic::Pager'
-; my $vers = '1.12'
+; my $pm = 'lib/Template/Magic/Pager.pm'
 
 ; WriteMakefile
-   ( NAME           => $dist
-   , VERSION        => $vers
+   ( NAME           => 'Template::Magic::Pager'
+   , VERSION_FROM   => $pm
    , ( $] ge '5.005' )
      ? ( AUTHOR     => 'Domizio Demichelis - perl.4pro.net'
-       , ABSTRACT   => 'HTML Pager for Template::Magic'
+       , ABSTRACT_FROM   => $pm
        )
      : ()
    , PREREQ_PM      => { 'Class::constr'   => '1.72'
@@ -24,8 +22,3 @@
 
 ; 1
 
-__END__
-
-Note: While I did removed the "phone home opt-out only logic" from all my distributions since 2004-24-06, the related ratings have not been removed so far. Sorry for the inconvenience.
-
-Domizio Demichelis
