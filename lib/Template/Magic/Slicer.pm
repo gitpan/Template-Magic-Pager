@@ -1,5 +1,5 @@
 package Template::Magic::Slicer ;
-$VERSION = 1.1 ;
+$VERSION = 1.11 ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
