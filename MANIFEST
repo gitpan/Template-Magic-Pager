@@ -1,0 +1,9 @@
+Changes
+lib/Template/Magic/Pager.pm
+lib/Template/Magic/Slicer.pm
+Makefile.PL
+MANIFEST			This list of files
+META.yml
+README
+t/01_base.t
+t/02_tm.t
