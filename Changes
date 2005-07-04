@@ -1,5 +1,8 @@
 Template-Magic-Pager Latest Versions Changes
 
+Version 1.14
+- Maintainance release. A few minor changes
+
 Version 1.13
 - Removed the - now outdated - note in the Makefile.PL
 - Minor change in the deprecated Template::Magic::Slicer

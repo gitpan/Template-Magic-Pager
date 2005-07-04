@@ -1,10 +1,11 @@
 package Template::Magic::Slicer ;
-$VERSION = 1.13 ;
-
+$VERSION = 1.14 ;
+use 5.006_001 ;
+use strict ;
+ 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
 
-; use strict
 ; use Carp
 ; $Carp::Internal{+__PACKAGE__}++
 ; use warnings::register
@@ -24,6 +25,8 @@ $VERSION = 1.13 ;
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Template::Magic::Slicer - Deprecated module (use Template::Magic::Pager)
@@ -37,3 +40,5 @@ Deprecated module maintained for backward compatibility. Use Template::Magic ins
 © 2004 by Domizio Demichelis (L<http://perl.4pro.net>)
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as perl itself.
+
+=cut

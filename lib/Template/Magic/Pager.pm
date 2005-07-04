@@ -1,10 +1,11 @@
 package Template::Magic::Pager ;
-$VERSION = 1.13 ;
+$VERSION = 1.14 ;
+use 5.006_001 ;
+use strict ;
 
 # This file uses the "Perlish" coding style
 # please read http://perl.4pro.net/perlish_coding_style.html
 
-; use strict
 ; use Carp
 ; $Carp::Internal{+__PACKAGE__}++
 ; our $no_template_magic_zone = 1 # prevents passing the zone object to properties
@@ -25,7 +26,7 @@ $VERSION = 1.13 ;
    ; if ( ref $$s{total_results} eq 'ARRAY' )
       { my $r = $$s{total_results}
       ; $$s{total_results} = @$r
-      ; $s->page_rows = [ @$r[ $s->start_offset .. $s->end_offset ] ]
+      ; $s->page_rows = [ @$r[ $s->_start_offset .. $s->_end_offset ] ]
       }
    ; $$s{total_results} ? $s : undef
    }
@@ -45,9 +46,9 @@ $VERSION = 1.13 ;
                          { /^[\d]+$/
                          && $_ > 0
                          }
-        } 
+        }
       , { name       => [ qw | rows_per_page 
-                               pages_per_index 
+                               pages_per_index
                              |
                         ]
         , default    => 10
@@ -79,15 +80,15 @@ $VERSION = 1.13 ;
    { $_[0]->previous_page && {} 
    }
    
-; sub start_offset
+; sub _start_offset
    { my ($s, $page_number) = @_
    ; $page_number ||= $s->page_number
    ; $s->rows_per_page * ($page_number - 1)
    }
    
-; sub end_offset
+; sub _end_offset
    { my ($s, $page_number) = @_
-   ; my $end = $s->start_offset($page_number) + $s->rows_per_page - 1
+   ; my $end = $s->_start_offset($page_number) + $s->rows_per_page - 1
    ; $end > ($s->total_results - 1)
      ? $s->total_results - 1
      : $end
@@ -95,12 +96,12 @@ $VERSION = 1.13 ;
 
 ; sub start_result
    { my ($s, $page_number) = @_
-   ; $s->start_offset($page_number) + 1
+   ; $s->_start_offset($page_number) + 1
    }
 
 ; sub end_result
    { my ($s, $page_number) = @_
-   ; $s->end_offset($page_number) + 1
+   ; $s->_end_offset($page_number) + 1
    }
    
 ; sub index
@@ -108,16 +109,16 @@ $VERSION = 1.13 ;
    ; my ( $half, $start, $end )
    ; $half = int ($s->pages_per_index / 2)
    ; my $page_number = $s->page_number
-   ; my $page_count  = $s->total_pages
-   ; if ( $page_count / 2 > $page_number) # if first half
+   ; my $total_pages = $s->total_pages
+   ; if ( $total_pages / 2 > $page_number) # if first half
       { $start = $page_number - $half
       ; $start = 1 if $start < 1
       ; $end   = $start + $s->pages_per_index - 1
-      ; $end   = $page_count if $end > $page_count
+      ; $end   = $total_pages if $end > $total_pages
       }
      else
       { $end   = $page_number + $half
-      ; $end   = $page_count if $end > $page_count
+      ; $end   = $total_pages if $end > $total_pages
       ; $start = $end - $s->pages_per_index + 1
       ; $start = 1 if $start < 1
       }
@@ -132,7 +133,7 @@ $VERSION = 1.13 ;
                   , page_number  => $_
                   }
               } $start .. $end
-   ; \ @i
+   ; \@i
    }
 
      
@@ -140,13 +141,15 @@ $VERSION = 1.13 ;
 
 __END__
 
+=pod
+
 =head1 NAME
 
 Template::Magic::Pager - HTML Pager for Template::Magic
 
-=head1 VERSION 1.13
+=head1 VERSION 1.14
 
-Included in Template-Magic-Pager 1.13 distribution.
+Included in Template-Magic-Pager 1.14 distribution.
 
 The latest versions changes are reported in the F<Changes> file in this distribution.
 
@@ -399,3 +402,5 @@ L<http://lists.sourceforge.net/lists/listinfo/template-magic-users>
 © 2004 by Domizio Demichelis (L<http://perl.4pro.net>)
 
 All Rights Reserved. This module is free software. It may be used, redistributed and/or modified under the same terms as perl itself.
+
+=cut
