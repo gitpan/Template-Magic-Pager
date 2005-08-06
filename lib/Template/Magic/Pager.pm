@@ -1,5 +1,5 @@
 package Template::Magic::Pager ;
-$VERSION = 1.14 ;
+$VERSION = 1.15 ;
 use 5.006_001 ;
 use strict ;
 
@@ -17,7 +17,7 @@ use strict ;
    ; my $s = bless {}, $c
    ; while ( my ($p, $v) = splice @_, 0, 2 )
       { if ($s->can($p))                     # if method
-         { $s->$p( $v )          
+         { $s->$p( $v )
          }
         else
          { croak qq(No such property "$p")
@@ -26,7 +26,7 @@ use strict ;
    ; if ( ref $$s{total_results} eq 'ARRAY' )
       { my $r = $$s{total_results}
       ; $$s{total_results} = @$r
-      ; $s->page_rows = [ @$r[ $s->_start_offset .. $s->_end_offset ] ]
+      ; $s->page_rows( [ @$r[ $s->_start_offset .. $s->_end_offset ] ] )
       }
    ; $$s{total_results} ? $s : undef
    }
@@ -47,7 +47,7 @@ use strict ;
                          && $_ > 0
                          }
         }
-      , { name       => [ qw | rows_per_page 
+      , { name       => [ qw | rows_per_page
                                pages_per_index
                              |
                         ]
@@ -73,11 +73,11 @@ use strict ;
 
 ; sub previous_page
    { my $s = shift
-   ; $s->page_number - 1 if $s->page_number > 1  
+   ; $s->page_number - 1 if $s->page_number > 1
    }
    
 ; sub previous 
-   { $_[0]->previous_page && {} 
+   { $_[0]->previous_page && {}
    }
    
 ; sub _start_offset
@@ -147,9 +147,9 @@ __END__
 
 Template::Magic::Pager - HTML Pager for Template::Magic
 
-=head1 VERSION 1.14
+=head1 VERSION 1.15
 
-Included in Template-Magic-Pager 1.14 distribution.
+Included in Template-Magic-Pager 1.15 distribution.
 
 The latest versions changes are reported in the F<Changes> file in this distribution.
 

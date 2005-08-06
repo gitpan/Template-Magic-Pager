@@ -1,5 +1,5 @@
 package Template::Magic::Slicer ;
-$VERSION = 1.14 ;
+$VERSION = 1.15 ;
 use 5.006_001 ;
 use strict ;
  
